@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+:root {
+  --background: #f0f2f5;
+  --foreground: #171717;
+  --card-bg: #e0e0e0;
+  --shadow-light: #ffffff;
+  --shadow-dark: #bebebe;
+}
+
+[data-theme='dark'] {
+  --background: #121417;
+  --foreground: #f0f2f5;
+  --card-bg: #1a1d21;
+  --shadow-light: #22262b;
+  --shadow-dark: #0e1013;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Update UI Components to use CSS variables */
+.neumorphic {
+  background-color: var(--card-bg);
+  box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+}
+
+.neumorphic-inset {
+  background-color: var(--card-bg);
+  box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+}

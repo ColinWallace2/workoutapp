@@ -1,0 +1,88 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String?   @unique
+  name              String?
+  xp                Int       @default(0)
+  level             Int       @default(1)
+  rank              Rank      @default(IRON)
+  bodyBattery       Int       @default(100)
+  streak            Int       @default(0)
+  lastWorkoutAt     DateTime?
+  totalVolume       Float     @default(0)
+  workouts          Workout[]
+  stats             GamificationStats?
+}
+
+model Workout {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  name        String
+  startTime   DateTime @default(now())
+  endTime     DateTime?
+  totalVolume Float    @default(0)
+  totalXp     Int      @default(0)
+  sets        Set[]
+}
+
+model Set {
+  id          String   @id @default(cuid())
+  workoutId   String
+  workout     Workout  @relation(fields: [workoutId], references: [id])
+  exerciseId  String
+  exercise    Exercise @relation(fields: [exerciseId], references: [id])
+  weight      Float
+  reps        Int
+  rpe         Int?     // Rate of Perceived Exertion
+  isPr        Boolean  @default(false)
+  xpGained    Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Exercise {
+  id          String @id @default(cuid())
+  name        String @unique
+  category    String // Push, Pull, Legs, Core
+  sets        Set[]
+}
+
+model GamificationStats {
+  id               String @id @default(cuid())
+  userId           String @unique
+  user             User   @relation(fields: [userId], references: [id])
+  consecutiveDays  Int    @default(0)
+  highestStreak    Int    @default(0)
+  promotionEligible Boolean @default(false)
+  lockoutUntil     DateTime?
+}
+
+model Quote {
+  id        String   @id @default(cuid())
+  text      String
+  author    String
+  isAi      Boolean  @default(false)
+  lastShown DateTime?
+}
+
+enum Rank {
+  IRON
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+  MASTER
+  GRANDMASTER
+  CHALLENGER
+}
